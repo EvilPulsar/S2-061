@@ -1,13 +1,16 @@
 # S2-061 (CVE-2020-17530)
 some struts tag , attributes which out of the range will call SetDynamicAttribute() function, it will cause ONGL expression execute
+
 受dynamic attribute影响的struts tag，使用了列表之外的属性，即自定义属性，即可视为存在S2-061，在知道参数的情况下，可以执行OGNL 表达式
 
 **filter by python**
 
 default struts tag list,  these dynamic-attribute options are true.
+
 默认的struts tag列表，这些dynamic-attribute选项都为True
 
 when code review，check the lists:
+
 代码审计，排查除以下列表之外的属性
 ```
 a:'accesskey','action','anchor','class','cssClass','cssErrorClass','cssErrorStyle','cssStyle','disabled','encode','errorPosition','escapeAmp','forceAddSchemeHostAndPort','href','id','includeContext','includeParams','javascriptTooltip','key','label','labelSeparator','labelposition','method','name','namespace','onblur','onchange','onclick','ondblclick','onfocus','onkeydown','onkeypress','onkeyup','onmousedown','onmousemove','onmouseout','onmouseover','onmouseup','onselect','openTemplate','portletMode','portletUrlType','requiredLabel','requiredPosition','scheme','style','tabindex','template','templateDir','theme','title','tooltip','tooltipConfig','tooltipCssClass','tooltipDelay','tooltipIconPath','value','windowState'
@@ -31,6 +34,7 @@ textfield:'accesskey','class','cssClass','cssErrorClass','cssErrorStyle','cssSty
 
 
 when pentest,you can detect fo html tag's attribute, attributes out of the range will be regard as exist s2-061：
+
 渗透的时候，检测除以下列表之外的属性，这些都是已经渲染后返回前端的HTML标签：
 ```
 tag_a = {'accesskey', 'action', 'anchor', 'class', 'cssClass', 'cssErrorClass', 'cssErrorStyle', 'cssStyle',
